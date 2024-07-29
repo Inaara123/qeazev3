@@ -1,31 +1,77 @@
+import { View, Text, FlatList, TouchableOpacity } from 'react-native'
+import React, { useContext } from 'react'
+import 'react-native-gesture-handler'
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
+import { useState } from 'react';
 import { StyleSheet } from 'react-native';
+import { RealTimeContext } from '../../RealTimeContext';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
 
-export default function TabTwoScreen() {
+
+const two = () => {
+  const dataArray = [{key:1,name:'John'},{key:2,name:'Doe'},{key:3,name:'Jane'},{key:4,name:'Doe'}]
+  const {realData, updateRealData} = useContext(RealTimeContext);
+  
+  console.log("The realData is :",realData)
+  const initdataArray = Object.keys(realData).map(key => ({
+    id: key,
+    ...realData[key]
+  }));
+  const {data,setData} = useState(initdataArray)
+  console.log("The initdataArray is :",initdataArray)
+  const handleMarkAsCompleted = (key) => {
+    updateRealData((prevData) => {
+      prevData.map((item) => {
+        if (item.key === key) {
+          item.isCompleted = !item.isCompleted;
+        }
+        return item;
+      });
+    });
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
-    </View>
-  );
-}
+    <GestureHandlerRootView>
+      <DraggableFlatList 
+        keyExtractor={(item) => item.id}
+        data={data}
+        renderItem={({item,drag,isActive}) => {
+          return (
+            <ScaleDecorator>
+              <TouchableOpacity
+     
+                onLongPress={drag}
+                disabled={isActive}>
 
+           
+              <Text style={styles.text}>{item.name}</Text>
+              </TouchableOpacity>
+            </ScaleDecorator>
+            
+          )
+        }}
+        onDragEnd={({data}) => setData(data)} 
+
+
+       
+        />
+
+    </GestureHandlerRootView>
+
+  )
+}
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
+  text : {  
+    fontSize : 40,
+    fontWeight : 'bold',
+    padding : 20,
+    color : 'black',
+    paddingBottom : 20, 
+    borderRadius : 10,
+    borderWidth : 2,
+    margin : 10,
+
+  },  
+})
+export default two
