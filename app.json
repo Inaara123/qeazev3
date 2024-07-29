@@ -4,6 +4,7 @@
     "slug": "qeazev3",
     "version": "1.0.0",
     "orientation": "portrait",
+    "entryPoint": "./app/(tabs)/home/index.tsx",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",

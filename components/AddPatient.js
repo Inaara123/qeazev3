@@ -30,7 +30,7 @@ const AddPatient = () => {
             name: formData.name,
 
         };
-        realData[1] = masterelement;
+        realData[1]=(masterelement);
         updateRealData(realData);
         console.log('Real Data form:', realData);
         router.navigate('../home/index');
@@ -42,6 +42,7 @@ const AddPatient = () => {
             name: formData.name,
         };
         newKey = Object.keys(realData).length + 1;
+        console.log("the type is :",typeof(realData));
         realData[newKey] = masterelement;
         updateRealData(realData);
         router.navigate('../home/index');

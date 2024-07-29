@@ -10,32 +10,30 @@ import { RealTimeContext } from '../../RealTimeContext';
 
 
 const two = () => {
+  function arrayToObject(arr) {
+    const result = {};
+    arr.forEach((item, index) => {
+        // Use index + 1 as the key to start from 1
+        result[index + 1] = item;
+    });
+    return result;
+}
   const dataArray = [{key:1,name:'John'},{key:2,name:'Doe'},{key:3,name:'Jane'},{key:4,name:'Doe'}]
   const {realData, updateRealData} = useContext(RealTimeContext);
-  
-  console.log("The realData is :",realData)
+
   const initdataArray = Object.keys(realData).map(key => ({
     id: key,
     ...realData[key]
   }));
-  const {data,setData} = useState(initdataArray)
-  console.log("The initdataArray is :",initdataArray)
-  const handleMarkAsCompleted = (key) => {
-    updateRealData((prevData) => {
-      prevData.map((item) => {
-        if (item.key === key) {
-          item.isCompleted = !item.isCompleted;
-        }
-        return item;
-      });
-    });
-  };
+ 
+  console.log("The initdataArray is :",realData)
+
 
   return (
     <GestureHandlerRootView>
       <DraggableFlatList 
-        keyExtractor={(item) => item.id}
-        data={data}
+      data={Object.values(realData)}
+      keyExtractor={(item) => Object.keys(realData).find((key) => realData[key] === item)}
         renderItem={({item,drag,isActive}) => {
           return (
             <ScaleDecorator>
@@ -51,7 +49,8 @@ const two = () => {
             
           )
         }}
-        onDragEnd={({data}) => setData(data)} 
+    
+        onDragEnd={({data}) => updateRealData(arrayToObject(data))} 
 
 
        
